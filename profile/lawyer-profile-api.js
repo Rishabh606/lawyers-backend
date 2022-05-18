@@ -19,6 +19,7 @@ lawyerProfileRouter.get('/:ID', async (req, res, next) => {
 
 })
 
+//add verification
 // handle incoming http request
 lawyerProfileRouter.post('/', async (req, res, next) => {
     try {
