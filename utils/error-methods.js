@@ -2,11 +2,11 @@ const logger = require('./winston-logger.js');
 
 
 function errorLogger(error, req, res, next) { // for logging errors
-  logger.log('error',error.stack) // log the error
+  logger.log('error', error.stack) // log the error
   next(error) // forward to next middleware
 }
 
-function errorHandler(error, req, res, next){
+function errorHandler(error, req, res, next) {
   //if headers are sent like in a video stream, express handles error 
   if (res.headersSent) {
     return next(error)
@@ -22,6 +22,6 @@ function errorHandler(error, req, res, next){
 }
 
 module.exports = {
-    errorLogger,
-    errorHandler    
+  errorLogger,
+  errorHandler
 }

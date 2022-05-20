@@ -1,7 +1,7 @@
-const {createLogger,transports, format} = require('winston');
+const { createLogger, transports, format } = require('winston');
 const { combine, timestamp, label, prettyPrint, splat, simple, colorize, errors } = format;
 
-const  loggingLevel = process.env.DEBUG_LEVEL||'debug'; //setting logging level
+const loggingLevel = process.env.DEBUG_LEVEL || 'debug'; //setting logging level
 
 //set logging configuration 
 let options = {
@@ -14,25 +14,25 @@ let options = {
 };
 //create logger
 const logger = createLogger({
-    format: combine(
-        label({label:'LOG'}),       // add label to logs
-        errors({ stack: true }),    // print stack trace
-        colorize(),                 // color the logs
-//      timestamp(),
-        prettyPrint(),              
-        splat(),                    //string interpolation
-        simple()                    //simple string
-    ),
-    //create transport: console, file where logs are stored
-    transports: [
-        new transports.Console(options.console)
-    ],
+  format: combine(
+    label({ label: 'LOG' }),       // add label to logs
+    errors({ stack: true }),    // print stack trace
+    colorize(),                 // color the logs
+    //      timestamp(),
+    prettyPrint(),
+    splat(),                    //string interpolation
+    simple()                    //simple string
+  ),
+  //create transport: console, file where logs are stored
+  transports: [
+    new transports.Console(options.console)
+  ],
 
-    exitOnError: false, // do not exit on handled exceptions
+  exitOnError: false, // do not exit on handled exceptions
 });
 
 logger.stream = {
-  write: function(message, encoding) {
+  write: function (message, encoding) {
     logger.info(message);
   },
 };

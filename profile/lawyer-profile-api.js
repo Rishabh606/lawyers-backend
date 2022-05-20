@@ -1,14 +1,15 @@
 const lawyerProfileRouter = require('express').Router();
 const logger = require('../utils/winston-logger');
 const createError = require('http-errors');
-
+const lawyerProfileService = require('./lawyer-profile-service');
+const schemaValidation = require('')
 //testing basic http API
 lawyerProfileRouter.get('/:ID', async (req, res, next) => {
     try {
-        let lawyerProfile = await getLawyerProfile(req.params.ID);
+        let lawyerProfile = await lawyerProfileService.getLawyerProfile(req.params.ID);
 
         if (!lawyerProfile) {
-            next(createError(404, "No Such Lawyer Exisits on our portal."));
+            next(createError(404, "No Such Lawyer Exists on our portal."));
         }
 
         res.status(200).json(lawyerProfile);
@@ -21,7 +22,7 @@ lawyerProfileRouter.get('/:ID', async (req, res, next) => {
 
 //add verification
 // handle incoming http request
-lawyerProfileRouter.post('/', async (req, res, next) => {
+lawyerProfileRouter.post('/', createLawyerProfileSchema, async (req, res, next) => {
     try {
         const verified = await verifyCredenitals(req.headers.authorization);
 
@@ -32,7 +33,7 @@ lawyerProfileRouter.post('/', async (req, res, next) => {
         let requestData = req.body;                             //extract http request body
         logger.log('info', 'raw message %o', requestData);
 
-        let lawyerProfileData = await createLawyerProfile(requestData);
+        let lawyerProfileData = await lawyerProfileService.createLawyerProfile(requestData);
 
         if (!lawyerProfileData) {
             next(createError(500, "Sorry profile couldn't be created"));
@@ -58,7 +59,7 @@ lawyerProfileRouter.put('/:ID', async (req, res, next) => {
         let requestData = req.body;                             //extract http request body
         logger.log('info', 'raw message %o', requestData);
 
-        let lawyerProfileData = await updateLawyerProfile(req.params.ID, requestData);
+        let lawyerProfileData = await lawyerProfileService.updateLawyerProfile(req.params.ID, requestData);
 
         if (!lawyerProfileData) {
             next(createError(500, "Sorry profile couldn't be modified"));
@@ -80,7 +81,7 @@ lawyerProfileRouter.delete('/:ID', async (req, res, next) => {
             return next(createError(401, "Unauthorised Access"));
         }
 
-        let lawyerProfileData = await disableLawyerProfile(req.params.ID);
+        let lawyerProfileData = await lawyerProfileService.disableLawyerProfile(req.params.ID);
 
         if (!lawyerProfileData) {
             next(createError(500, "Sorry profile couldn't be disabled"));

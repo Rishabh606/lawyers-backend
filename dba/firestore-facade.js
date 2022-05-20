@@ -19,6 +19,10 @@ async function getAllDocsFromDB(collectionPath) {
     const collectionRef = firestore.collection(collectionPath).get();
     return collectionRef.docs.map(doc => doc.data());
 }
+async function updateDocsInDB(collectionPath, docID, data) {
+    logger.info(`updateDocsInDB: ${collectionPath}/${docID}`);
+    return firestore.collection(collectionPath).doc(docID).update(data);
+}
 function getAllDataFromDBWithRealtimeSync(database, documentID, path, classRef) {
     //get all objects in the give database path and reference
     //places watch on the given collection of firestore
@@ -67,5 +71,6 @@ module.exports = {
     getAllDataFromDBWithRealtimeSync,
     getAllDocsFromDB,
     getDocFromDB,
-    addDataToDB
+    addDataToDB,
+    updateDocsInDB
 }

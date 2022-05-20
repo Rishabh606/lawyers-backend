@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+require('dotenv').config();
+
 const createError = require('http-errors');
 
 const winston = require('./utils/winston-logger');
