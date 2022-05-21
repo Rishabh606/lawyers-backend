@@ -53,59 +53,67 @@ lawyerProfileRouter.post(
   }
 );
 
-lawyerProfileRouter.put("/:ID", async (req, res, next) => {
-  try {
-    const verified = await verifyCredenitals(
-      req.params.ID,
-      req.headers.authorization
-    );
+lawyerProfileRouter.put(
+  "/:ID",
+  schemaValidation.updateProfileSchema,
+  async (req, res, next) => {
+    try {
+      const verified = await verifyCredenitals(
+        req.params.ID,
+        req.headers.authorization
+      );
 
-    if (!verified) {
-      return next(createError(401, "Unauthorised Access"));
+      if (!verified) {
+        return next(createError(401, "Unauthorised Access"));
+      }
+
+      let requestData = req.body; //extract http request body
+      logger.log("info", "raw message %o", requestData);
+
+      let lawyerProfileData = await lawyerProfileService.updateLawyerProfile(
+        req.params.ID,
+        requestData
+      );
+
+      if (!lawyerProfileData) {
+        next(createError(500, "Sorry profile couldn't be modified"));
+      }
+
+      res.status(201).json(lawyerProfileData); //send response
+    } catch (e) {
+      logger.error(e);
+      next(createError(400, e.message)); //throw bad request error
     }
-
-    let requestData = req.body; //extract http request body
-    logger.log("info", "raw message %o", requestData);
-
-    let lawyerProfileData = await lawyerProfileService.updateLawyerProfile(
-      req.params.ID,
-      requestData
-    );
-
-    if (!lawyerProfileData) {
-      next(createError(500, "Sorry profile couldn't be modified"));
-    }
-
-    res.status(201).json(lawyerProfileData); //send response
-  } catch (e) {
-    logger.error(e);
-    next(createError(400, e.message)); //throw bad request error
   }
-});
+);
 
-lawyerProfileRouter.delete("/:ID", async (req, res, next) => {
-  try {
-    const verified = await verifyCredenitals(
-      req.params.ID,
-      req.headers.authorization
-    );
+lawyerProfileRouter.delete(
+  "/:ID",
+  schemaValidation.deleteProfileSchema,
+  async (req, res, next) => {
+    try {
+      const verified = await verifyCredenitals(
+        req.params.ID,
+        req.headers.authorization
+      );
 
-    if (!verified) {
-      return next(createError(401, "Unauthorised Access"));
+      if (!verified) {
+        return next(createError(401, "Unauthorised Access"));
+      }
+
+      let lawyerProfileData = await lawyerProfileService.disableLawyerProfile(
+        req.params.ID
+      );
+
+      if (!lawyerProfileData) {
+        next(createError(500, "Sorry profile couldn't be disabled"));
+      }
+
+      res.status(204).send("Disable Successful"); //send response
+    } catch (e) {
+      logger.error(e);
+      next(createError(400, e.message)); //throw bad request error
     }
-
-    let lawyerProfileData = await lawyerProfileService.disableLawyerProfile(
-      req.params.ID
-    );
-
-    if (!lawyerProfileData) {
-      next(createError(500, "Sorry profile couldn't be disabled"));
-    }
-
-    res.status(204).send("Disable Successful"); //send response
-  } catch (e) {
-    logger.error(e);
-    next(createError(400, e.message)); //throw bad request error
   }
-});
+);
 module.exports = lawyerProfileRouter;
