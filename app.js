@@ -7,6 +7,7 @@ const createError = require('http-errors');
 
 const winston = require('./utils/winston-logger');
 const errorMethods = require('./utils/error-methods.js');
+const authenticate = require('./utils/authenticate.js');
 
 const lawyerProfileRoute = require('./profile/lawyer-profile-api.js');
 const scheduleRoute = require('./scheduler/schedule-api.js');
@@ -33,7 +34,7 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
     res.status(200).send("Health Check is Successful.\n");                //testing the request at baseURL/
 })
-
+app.use(authenticate);
 app.use(lawyerProfileRouteUrl, lawyerProfileRoute);         //http route
 app.use(scheduleRouteUrl, scheduleRoute);                   //http route
 
