@@ -1,5 +1,5 @@
 
-const firestore = require('../config/firestore-config').firestore;
+const { firestore, admin } = require('../config/firestore-config');
 const logger = require('../utils/winston-logger');
 
 async function getDocFromDB(collectionPath, docID) {

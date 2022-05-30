@@ -5,6 +5,7 @@
 //     email;                      //string
 //     mobileNumber;               //string
 
+//     isDeleted;                  //boolean
 //     officeAddress;              //office
 //     cityOfPractise;             //string
 //     country;                    //string
