@@ -65,12 +65,29 @@ function getAllDataFromDBWithRealtimeSync(database, documentID, path, classRef) 
         }
     });
 }
-
+async function verifyToken(idToken) {
+    let checkRevoked = true;
+    return admin
+        .auth()
+        .verifyIdToken(idToken, checkRevoked)
+        .then(() => {
+            return true;
+        })
+        .catch((error) => {
+            logger.info(error);
+            if (error.code == "auth/id-token-revoked") {
+                return "Token Id is expired. Please login again";
+            } else {
+                return "Incorrect Token Id";
+            }
+        });
+}
 
 module.exports = {
     getAllDataFromDBWithRealtimeSync,
     getAllDocsFromDB,
     getDocFromDB,
     addDataToDB,
-    updateDocsInDB
+    updateDocsInDB,
+    verifyToken
 }
