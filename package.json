@@ -4,7 +4,7 @@
   "description": "Lawyer backend to handle profile, scheduling meeting",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node index.js"
   },
   "author": "Rishabh Gupta",
@@ -18,5 +18,9 @@
     "joi": "^17.6.0",
     "morgan": "^1.10.0",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "supertest": "^6.2.3"
   }
 }
