@@ -1,9 +1,10 @@
-const { del } = require("express/lib/application");
-const createError = require("http-errors");
-const Joi = require("joi");
+const { del } = require('express/lib/application');
+const logger = require('../utils/winston-logger');
+const createError = require('http-errors');
+const Joi = require('joi');
 
 const LawyerProfileSchema = Joi.object({
-    auth: Joi.string().required(),
+    auth: Joi.string().required().strip(),
 
     name: Joi.string().min(5).max(50),
     email: Joi.string(),
@@ -18,7 +19,7 @@ const LawyerProfileSchema = Joi.object({
     practiceArea: Joi.string(),
     otherPracticeAreas: Joi.array().items(Joi.string()),
     image: Joi.string(),
-    rating: Joi.number(),
+    rating: Joi.string(),
     awards: Joi.string(),
     clientHistory: Joi.object({
         transactionObject: Joi.object(),
@@ -31,7 +32,7 @@ const LawyerProfileSchema = Joi.object({
     }),
 });
 
-const validate = (value, schema, next, customOptions = {}) => {
+const validate = (value, schema, req, next, customOptions = {}) => {
     const validateOptions = {
         abortEarly: false,
         allowUnknown: true,
@@ -39,12 +40,14 @@ const validate = (value, schema, next, customOptions = {}) => {
         ...customOptions,
     };
 
-    const result = schema.validate(value, options);
+    const result = schema.validate(value, validateOptions);
 
     if (!result.error) {
+        req.body = result.value;
         next();
     } else {
-        next(createError(400, "bad request"));
+        logger.error(result.error);
+        next(createError(400, 'bad request'));
     }
 };
 
@@ -54,23 +57,29 @@ function createProfileSchema(req, res, next) {
         auth: req.headers.authorization,
     };
 
-    validate(data, LawyerProfileSchema, next, { presence: true });
+    validate(data, LawyerProfileSchema, req, next, { presence: true });
 }
 
 function updateProfileSchema(req, res, next) {
+    const data = {
+        ...req.body,
+        auth: req.headers.authorization,
+        id: req.params.ID,
+    };
     const newLawyerProfileSchema = LawyerProfileSchema.keys({
-        id: Joi.string().alphanum().required(),
+        id: Joi.string().alphanum().required().strip(),
     });
-    validate(req.body, newLawyerProfileSchema, next);
+    validate(data, newLawyerProfileSchema, req, next);
 }
 
 function deleteProfileSchema(req, res, next) {
-    const DeleteParams = req.body;
+    const DeleteParams = { auth: req.headers.authorization, id: req.params.ID };
     const ValidateDeleter = Joi.object({
-        id: Joi.string().alphanum().required(),
+        auth: Joi.string().required().strip(),
+        id: Joi.string().alphanum().required().strip(),
     });
 
-    validate(DeleteParams, ValidateDeleter, next);
+    validate(DeleteParams, ValidateDeleter, req, next);
 }
 
 module.exports = {

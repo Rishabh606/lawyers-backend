@@ -1,15 +1,17 @@
 const logger = require('./winston-logger');
+const createError = require('http-errors');
 const { verifyToken } = require('../dba/firestore-facade');
+
 exports.verifyCredentials = async (req, res, next) => {
     try {
         let idToken;
         if (
             req.headers.authorization &&
-            req.headers.authorization.startsWith("Bearer")
+            req.headers.authorization.startsWith('Bearer')
         ) {
-            idToken = req.headers.authorization.split(" ")[1];
+            idToken = req.headers.authorization.split(' ')[1];
         } else {
-            next(createError(401, "Token not found, you are not logged in!"));
+            next(createError(401, 'Token not found, you are not logged in!'));
         }
         logger.debug(idToken);
 
@@ -22,6 +24,6 @@ exports.verifyCredentials = async (req, res, next) => {
         next();
     } catch (e) {
         logger.error(e);
-        next(createError(500, "Internal Server Error"));
+        next(createError(500, 'Internal Server Error'));
     }
 };
