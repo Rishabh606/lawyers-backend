@@ -7,7 +7,7 @@ const createError = require('http-errors');
 
 const winston = require('./utils/winston-logger');
 const errorMethods = require('./utils/error-methods.js');
-const { verifyCredentials } = require('./utils/authentication.js');
+const verifyCredentials = require('./utils/authentication.js');
 
 const lawyerProfileRoute = require('./profile/lawyer-profile-api.js');
 const scheduleRoute = require('./scheduler/schedule-api.js');

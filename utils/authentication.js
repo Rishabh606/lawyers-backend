@@ -2,7 +2,7 @@ const logger = require('./winston-logger');
 const createError = require('http-errors');
 const { verifyToken } = require('../dba/firestore-facade');
 
-const verifyCredentials = async (req, res, next) => {
+async function verifyCredentials(req, res, next) {
     try {
         let idToken;
         if (
@@ -29,4 +29,4 @@ const verifyCredentials = async (req, res, next) => {
     }
 };
 
-module.exports = exports = verifyCredentials;
+module.exports = verifyCredentials;
