@@ -20,7 +20,13 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "husky": "^8.0.1",
     "jest": "^28.1.0",
     "supertest": "^6.2.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run test"
+    }
   }
 }

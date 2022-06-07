@@ -1,7 +1,7 @@
 const userProfileRouter = require('express').Router();
 const logger = require('../utils/winston-logger');
 const createError = require('http-errors');
-const userProfileService = require('./user-profile-service');
+const userProfileService = require('../profile/user-profile-service');
 // const schemaValidation = require('./user-schema-validation');
 const { verifyCredentials } = require('../utils/authentication.js');
 
@@ -30,11 +30,6 @@ userProfileRouter.post(
     // schemaValidation.createProfileSchema,
     async (req, res, next) => {
         try {
-            // const verified = await verifyCredentials(req.headers.authorization);
-
-            // if (!verified) {
-            //   return next(createError(401, "Unauthorised Access"));
-            // }
 
             let requestData = req.body; //extract http request body
             logger.log('info', 'raw message %o', requestData);
@@ -94,15 +89,6 @@ userProfileRouter.delete(
     // schemaValidation.deleteProfileSchema,
     async (req, res, next) => {
         try {
-            // const verified = await verifyCredentials(
-            //   req.params.ID,
-            //   req.headers.authorization
-            // );
-
-            // if (!verified) {
-            //   return next(createError(401, "Unauthorised Access"));
-            // }
-
             let userProfileData = await userProfileService.disableUserProfile(
                 req.params.ID
             );

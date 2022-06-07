@@ -3,7 +3,6 @@ const logger = require('../utils/winston-logger');
 const createError = require('http-errors');
 const lawyerProfileService = require('./lawyer-profile-service');
 const schemaValidation = require('./lawyer-schema-validation');
-const { verifyCredentials } = require('../utils/authentication.js');
 
 //testing basic http API
 lawyerProfileRouter.get('/:ID', async (req, res, next) => {
@@ -30,12 +29,6 @@ lawyerProfileRouter.post(
     schemaValidation.createProfileSchema,
     async (req, res, next) => {
         try {
-            // const verified = await verifyCredentials(req.headers.authorization);
-
-            // if (!verified) {
-            //   return next(createError(401, "Unauthorised Access"));
-            // }
-
             let requestData = req.body; //extract http request body
             logger.log('info', 'raw message %o', requestData);
 
@@ -59,15 +52,6 @@ lawyerProfileRouter.put(
     schemaValidation.updateProfileSchema,
     async (req, res, next) => {
         try {
-            // const verified = await verifyCredentials(
-            //   req.params.ID,
-            //   req.headers.authorization
-            // );
-
-            // if (!verified) {
-            //   return next(createError(401, "Unauthorised Access"));
-            // }
-
             let requestData = req.body; //extract http request body
             logger.log('info', 'raw message %o', requestData);
 
@@ -94,15 +78,6 @@ lawyerProfileRouter.delete(
     schemaValidation.deleteProfileSchema,
     async (req, res, next) => {
         try {
-            // const verified = await verifyCredentials(
-            //   req.params.ID,
-            //   req.headers.authorization
-            // );
-
-            // if (!verified) {
-            //   return next(createError(401, "Unauthorised Access"));
-            // }
-
             let lawyerProfileData =
                 await lawyerProfileService.disableLawyerProfile(req.params.ID);
 
