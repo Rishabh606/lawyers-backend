@@ -9,9 +9,11 @@
 -   docker tag repository-name gcr.io/{PROJECT_ID}/repository-name
 -   docker push gcr.io/{PROJECT_ID}/repository-name
 
-## Uninstall Firestore
-    You can use this same code even if you don't want to use the firestore. 
--   delete firestore-config.js in config folder
--   npm uninstall firestore-admin --save
+## Run tets:
+- npm run test
+
+## Contribute 
+- Create new branch and commit
+- Code will need to pass tests locally
 
 ## Author: Rishabh Gupta
